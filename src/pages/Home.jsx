@@ -19,7 +19,7 @@ const Home = () => {
                 <motion.section className='home' {...slideAnimation("left")}>
                     {/* slideAnimation gives preset px motions according to the direction  */}
                     <motion.header {...slideAnimation("down")}>
-                        <img src='./threejs.png' alt='logo' className='w-8 h-8 object-contain' />
+                        <img src='./ebomb.png' alt='logo' className='w-8 h-8 object-contain' />
                     </motion.header>
 
                     <motion.div className='home-content' {...headContainerAnimation}>

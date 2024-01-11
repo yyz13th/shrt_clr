@@ -10,7 +10,7 @@ const CustomButton = ({ type, title, customStyles, handleClick }) => {
         if (type === 'filled') {
             return {
                 backgroundColor: snap.color,
-                color: getContrastingColor(snap.color)
+                color: getContrastingColor(snap.color) //uses helper so when button color is white -> it automatically changes text color
             }
         } else if (type === 'outline') {
             return {

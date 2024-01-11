@@ -15,12 +15,12 @@ import { AIPicker, FilePicker, ColorPicker, Tab, CustomButton } from '../compone
 const Customizer = () => {
     const snap = useSnapshot(state);
 
-    const [file, setFile] = useState('');
+    const [file, setFile] = useState(''); //for image picker
 
     const [promt, setPromt] = useState('');
     const [generatingImg, setGeneratingImg] = useState(false);
 
-    const [activeEditorTab, setActiveEditorTab] = useState('');
+    const [activeEditorTab, setActiveEditorTab] = useState(''); //for tabs
     const [activeFilterTab, setActiveFilterTab] = useState({
         logoShirt: true,
         stylishShirt: false
@@ -28,16 +28,52 @@ const Customizer = () => {
 
     //show tab content depending on active tab
     const generateTabContent = () => {
-        switch(activeEditorTab){
+        switch (activeEditorTab) {
             case 'colorpicker':
                 return <ColorPicker />
             case 'filepicker':
-                return <FilePicker />
+                return <FilePicker
+                    file={file}
+                    setFile={setFile}
+                    readFile={readFile}
+                />
             case 'aipicker':
                 return <AIPicker />
 
             default: return null;
         }
+    }
+
+    const handleDecals = (type, result) => {
+        const decalType = DecalTypes[type];
+
+        state[decalType.stateProperty] = result; //update decal state in store
+
+        //checks the filter selected on bottom tab
+        if (!activeFilterTab[decalType.filterTab]) {
+            handleActiveFilterTab(decalType.filterTab);
+        }
+    }
+    const handleActiveFilterTab = (tabName) => {
+        switch (tabName) {
+            case 'logoShirt':
+                state.isLogoTexture = !activeFilterTab[tabName]; //toogle it
+                break;
+            case 'stylishShirt':
+                state.isFullTexture = !activeFilterTab[tabName];
+                break;
+            default:
+                state.isLogoTexture = true;
+                state.isFullTexture = false;
+        }
+    }
+    const readFile = (type) => {
+        reader(file)
+            .then((result) => {
+                handleDecals(type, result)
+                setActiveEditorTab(''); //reset tabs
+                setFile('');
+            })
     }
 
     return (
@@ -55,7 +91,7 @@ const Customizer = () => {
                                     <Tab
                                         key={tab.name}
                                         tab={tab}
-                                        handleClick={() => {setActiveEditorTab(tab.name)}}
+                                        handleClick={() => { setActiveEditorTab(tab.name) }}
                                     />
                                 ))}
                                 {generateTabContent()}
